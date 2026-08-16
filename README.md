@@ -31,7 +31,7 @@ Advanced Pipez Utilities is a Pipez add-on for Minecraft 1.21.1 on NeoForge. It 
 
 The built mod is written to `build/libs/advanced_pipez_utilities-1.0.0.jar`.
 
-Every push to `main` and every pull request targeting `main` is built automatically by GitHub Actions. Successful workflow runs provide the generated JAR as a downloadable artifact.
+Every push to `1.21.1` and every pull request targeting `1.21.1` is built automatically by GitHub Actions. Successful workflow runs provide the generated JAR as a downloadable artifact.
 
 ## License
 
