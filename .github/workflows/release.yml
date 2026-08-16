@@ -1,0 +1,99 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*\+1.21.1'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Publish NeoForge 1.21.1
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Grant execute permission to Gradle wrapper
+        run: chmod +x gradlew
+
+      - name: Validate tag and read version
+        id: version
+        shell: bash
+        run: |
+          mod_version="$(sed -n 's/^mod_version=//p' gradle.properties)"
+          minecraft_version="$(sed -n 's/^minecraft_version=//p' gradle.properties)"
+          expected_tag="v${mod_version}+${minecraft_version}"
+          if [[ "${GITHUB_REF_NAME}" != "${expected_tag}" ]]; then
+            echo "Expected tag ${expected_tag}, got ${GITHUB_REF_NAME}." >&2
+            exit 1
+          fi
+          if [[ "${mod_version}" == *-alpha* ]]; then
+            release_type="alpha"
+          elif [[ "${mod_version}" == *-beta* || "${mod_version}" == *-rc* ]]; then
+            release_type="beta"
+          else
+            release_type="release"
+          fi
+          echo "version=${mod_version}+${minecraft_version}" >> "${GITHUB_OUTPUT}"
+          echo "release_type=${release_type}" >> "${GITHUB_OUTPUT}"
+          echo "prerelease=$([[ ${release_type} == release ]] && echo false || echo true)" >> "${GITHUB_OUTPUT}"
+
+      - name: Verify publishing secrets
+        shell: bash
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+        run: |
+          if [[ -z "${MODRINTH_TOKEN}" || -z "${CURSEFORGE_TOKEN}" ]]; then
+            echo "MODRINTH_TOKEN and CURSEFORGE_TOKEN must be configured as repository secrets." >&2
+            exit 1
+          fi
+
+      - name: Build release JAR
+        run: ./gradlew build --no-daemon
+
+      - name: Publish release
+        uses: Kira-NT/mc-publish@v3
+        with:
+          modrinth-id: dVgBH47t
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          curseforge-id: "1655012"
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-tag: ${{ github.ref_name }}
+          github-commitish: ${{ github.sha }}
+          github-generate-changelog: true
+          github-draft: false
+          github-prerelease: ${{ steps.version.outputs.prerelease }}
+          files: build/libs/advanced_pipez_utilities-*.jar
+          name: Advanced Pipez Utilities ${{ steps.version.outputs.version }}
+          version: ${{ steps.version.outputs.version }}
+          version-type: ${{ steps.version.outputs.release_type }}
+          changelog: Automated release for Minecraft 1.21.1. See the generated GitHub release notes for details.
+          loaders: neoforge
+          game-versions: 1.21.1
+          game-version-filter: none
+          environment: client | server
+          java: 21
+          dependencies: pipez(required)
+          retry-attempts: 3
+          retry-delay: 10000
+          fail-mode: fail
