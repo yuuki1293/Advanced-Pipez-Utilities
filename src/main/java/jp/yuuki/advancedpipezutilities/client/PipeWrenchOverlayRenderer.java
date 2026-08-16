@@ -151,10 +151,17 @@ public final class PipeWrenchOverlayRenderer {
         Vec3 bottomRight = toWorld(face, pos, maxU, minV).subtract(camera);
         Vec3 bottomLeft = toWorld(face, pos, minU, minV).subtract(camera);
 
-        addTexturedVertex(consumer, pose, topLeft, color, 0F, 1F);
-        addTexturedVertex(consumer, pose, topRight, color, 1F, 1F);
-        addTexturedVertex(consumer, pose, bottomRight, color, 1F, 0F);
-        addTexturedVertex(consumer, pose, bottomLeft, color, 0F, 0F);
+        if (face == Direction.SOUTH || face == Direction.WEST || face == Direction.UP) {
+            addTexturedVertex(consumer, pose, topLeft, color, 0F, 1F);
+            addTexturedVertex(consumer, pose, bottomLeft, color, 0F, 0F);
+            addTexturedVertex(consumer, pose, bottomRight, color, 1F, 0F);
+            addTexturedVertex(consumer, pose, topRight, color, 1F, 1F);
+        } else {
+            addTexturedVertex(consumer, pose, topLeft, color, 0F, 1F);
+            addTexturedVertex(consumer, pose, topRight, color, 1F, 1F);
+            addTexturedVertex(consumer, pose, bottomRight, color, 1F, 0F);
+            addTexturedVertex(consumer, pose, bottomLeft, color, 0F, 0F);
+        }
     }
 
     private static void addTexturedVertex(VertexConsumer consumer, PoseStack.Pose pose, Vec3 point,
