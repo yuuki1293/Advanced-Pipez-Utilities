@@ -48,12 +48,12 @@ public abstract class PipeTileEntityMixin implements ManualConnectionAccess {
         }
     }
 
-    @Inject(method = {"load", "m_142466_"}, at = @At("TAIL"))
+    @Inject(method = "load", at = @At("TAIL"), remap = true)
     private void advancedPipezUtilities$loadManualConnections(CompoundTag tag, CallbackInfo ci) {
         advancedPipezUtilities$manualConnections = tag.getByte(ADVANCED_PIPEZ_UTILITIES_MANUAL_CONNECTIONS);
     }
 
-    @Inject(method = {"saveAdditional", "m_183515_"}, at = @At("TAIL"))
+    @Inject(method = "saveAdditional", at = @At("TAIL"), remap = true)
     private void advancedPipezUtilities$saveManualConnections(CompoundTag tag, CallbackInfo ci) {
         if (advancedPipezUtilities$manualConnections != 0) {
             tag.putByte(ADVANCED_PIPEZ_UTILITIES_MANUAL_CONNECTIONS,

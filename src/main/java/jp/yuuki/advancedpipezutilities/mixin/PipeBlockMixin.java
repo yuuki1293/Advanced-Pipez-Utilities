@@ -25,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(value = PipeBlock.class, remap = false)
 public abstract class PipeBlockMixin {
 
-    @Inject(method = {"getStateForPlacement", "m_5573_"}, at = @At("RETURN"), cancellable = true)
+    @Inject(method = "getStateForPlacement", at = @At("RETURN"), cancellable = true, remap = true)
     private void advancedPipezUtilities$connectOnlyToPlacementTarget(BlockPlaceContext context,
                                                                      CallbackInfoReturnable<BlockState> cir) {
         BlockState state = cir.getReturnValue();
@@ -70,12 +70,10 @@ public abstract class PipeBlockMixin {
     }
 
     @Inject(
-            method = {
-                    "getShape(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/shapes/CollisionContext;)Lnet/minecraft/world/phys/shapes/VoxelShape;",
-                    "m_5940_(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/shapes/CollisionContext;)Lnet/minecraft/world/phys/shapes/VoxelShape;"
-            },
+            method = "getShape(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/shapes/CollisionContext;)Lnet/minecraft/world/phys/shapes/VoxelShape;",
             at = @At("HEAD"),
-            cancellable = true
+            cancellable = true,
+            remap = true
     )
     private void advancedPipezUtilities$useFullBlockWrenchSelection(BlockState state, BlockGetter level,
                                                                     BlockPos pos, CollisionContext context,
