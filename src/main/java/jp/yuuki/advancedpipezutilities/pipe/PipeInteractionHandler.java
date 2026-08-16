@@ -57,6 +57,9 @@ public final class PipeInteractionHandler {
         }
 
         boolean connect = !pipe.isConnected(level, pos, side);
+        if (!connect && pipe.isExtracting(level, pos, side)) {
+            pipe.setExtracting(level, pos, side, false);
+        }
         setConnection(level, pos, pipe, side, connect);
         playWrenchSound(level, pos, connect ? 1.15F : 0.85F);
         PipeTileEntity.markPipesDirty(level, pos);
