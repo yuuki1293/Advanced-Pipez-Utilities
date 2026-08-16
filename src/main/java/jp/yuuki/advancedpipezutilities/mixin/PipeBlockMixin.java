@@ -12,6 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
@@ -20,6 +21,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = PipeBlock.class, remap = false)
@@ -67,6 +69,45 @@ public abstract class PipeBlockMixin {
         boolean manuallyConnected = tile instanceof ManualConnectionAccess access
                 && access.advancedPipezUtilities$isManuallyConnected(side);
         cir.setReturnValue(manuallyConnected && !tile.isDisconnected(side));
+    }
+
+    @Inject(method = "neighborChanged", at = @At("TAIL"))
+    private void advancedPipezUtilities$clearMissingInventoryConnection(BlockState state, Level level,
+                                                                         BlockPos pos, Block neighborBlock,
+                                                                         BlockPos neighborPos,
+                                                                         boolean movedByPiston, CallbackInfo ci) {
+        if (level.isClientSide) {
+            return;
+        }
+
+        Direction changedSide = null;
+        for (Direction side : Direction.values()) {
+            if (pos.relative(side).equals(neighborPos)) {
+                changedSide = side;
+                break;
+            }
+        }
+        if (changedSide == null) {
+            return;
+        }
+
+        PipeBlock self = (PipeBlock) (Object) this;
+        PipeTileEntity tile = self.getTileEntity(level, pos);
+        if (!(tile instanceof ManualConnectionAccess access)
+                || !access.advancedPipezUtilities$isManuallyConnected(changedSide)) {
+            return;
+        }
+        if (!self.isPipe(level, pos, changedSide) && self.canConnectTo(level, pos, changedSide)) {
+            return;
+        }
+
+        access.advancedPipezUtilities$setManuallyConnected(changedSide, false);
+        if (tile.hasReasonToStay()) {
+            tile.syncData();
+        } else {
+            self.setHasData(level, pos, false);
+        }
+        PipeTileEntity.markPipesDirty(level, pos);
     }
 
     @Inject(
