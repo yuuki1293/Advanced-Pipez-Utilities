@@ -51,7 +51,7 @@ git tag v1.0.0+1.21.1
 git push origin v1.0.0+1.21.1
 ```
 
-The release workflow validates the tag, builds the production JAR, and publishes the same artifact to all three services. Alpha, beta, and release-candidate versions are marked as prereleases automatically when `mod_version` contains `-alpha`, `-beta`, or `-rc`.
+The release workflow validates the tag, extracts the matching version section from `CHANGELOG.md`, builds the production JAR, and publishes the same artifact and changelog to all three services. Alpha, beta, and release-candidate versions are marked as prereleases automatically when `mod_version` contains `-alpha`, `-beta`, or `-rc`.
 
 ## License
 
