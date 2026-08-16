@@ -1,31 +1,38 @@
 # Advanced Pipez Utilities
 
-Pipez 1.21.1 (NeoForge) に、GregTech風の手動接続レンチを追加するアドオンです。
+[![Build](https://github.com/yuuki1293/Advanced-Pipez-Utilities/actions/workflows/build.yml/badge.svg)](https://github.com/yuuki1293/Advanced-Pipez-Utilities/actions/workflows/build.yml)
 
-## 機能
+Advanced Pipez Utilities is a Pipez add-on for Minecraft 1.21.1 on NeoForge. It adds GregTech-style manual pipe connections and an advanced pipe wrench.
 
-- Pipezのパイプは、隣接ブロックへ無条件には自動接続しません。
-- パイプまたは接続可能ブロックへフォーカスを合わせて設置した場合、その対象面だけへ自動接続します。
-- 設置時に別の面へ偶然隣接していたパイプとは切断状態になります。
-- `高性能パイプレンチ` を持っている間、パイプの選択判定がフルブロックになります。
-- `高性能パイプレンチ` は、Pipez標準レンチと同じ形状・陰影を保った青色版です。
-- 照準中の面にGTCEu Modernと同じ青い脈動グリッドと接続状態アイコンを表示します。
-- 右クリックで選択方向の接続を切り替えます。
-- Shift＋右クリックで選択方向の自動搬出を切り替えます。未接続なら先に接続します。
-- 正面中央で手前、上下左右の辺で対応方向、四隅で奥側を選択できます。
-- パイプ同士も、設置時にフォーカスを合わせた相手とのみ自動接続します。その他の面はレンチで接続・切断できます。
+## Features
 
-## 必要環境
+- Pipes no longer connect indiscriminately to every adjacent compatible block.
+- A newly placed pipe automatically connects only to the pipe or compatible block that was targeted during placement.
+- Other sides that merely happen to be adjacent remain disconnected until configured with the wrench.
+- Holding the Advanced Pipe Wrench gives pipes a full-block selection area.
+- The wrench uses the shape and shading of Pipez's standard wrench with a blue tint.
+- The targeted face displays the same blue pulsing grid and connection-state icons used by GTCEu Modern.
+- Right-click toggles the connection in the selected direction.
+- Shift-right-click toggles automatic extraction in the selected direction, connecting the side first when necessary.
+- The center selects the near side, the four edges select their corresponding directions, and the corners select the far side.
+
+## Requirements
 
 - Minecraft 1.21.1
-- NeoForge 21.1.209以上
-- Pipez 1.21.1-1.2.31以上
+- NeoForge 21.1.209 or later
+- Pipez 1.21.1-1.2.31 or later
 - Java 21
 
-## ビルド
+## Building
 
 ```shell
 ./gradlew build
 ```
 
-成果物は `build/libs/advanced_pipez_utilities-1.0.0.jar` です。
+The built mod is written to `build/libs/advanced_pipez_utilities-1.0.0.jar`.
+
+Every push to `main` and every pull request targeting `main` is built automatically by GitHub Actions. Successful workflow runs provide the generated JAR as a downloadable artifact.
+
+## License
+
+The source code is available under the MIT License. The two GTCEu Modern overlay assets retain their original LGPL-3.0 license; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for details.
