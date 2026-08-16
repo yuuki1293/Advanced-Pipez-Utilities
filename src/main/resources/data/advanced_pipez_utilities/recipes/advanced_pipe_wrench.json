@@ -1,19 +1,11 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "minecraft:crafting_shapeless",
   "category": "equipment",
-  "pattern": [
-    "I I",
-    " II",
-    " S "
-  ],
-  "key": {
-    "I": {
-      "item": "minecraft:iron_ingot"
-    },
-    "S": {
-      "item": "minecraft:stick"
+  "ingredients": [
+    {
+      "item": "pipez:wrench"
     }
-  },
+  ],
   "result": {
     "item": "advanced_pipez_utilities:advanced_pipe_wrench",
     "count": 1
