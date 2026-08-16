@@ -1,0 +1,7 @@
+{
+  "item.advanced_pipez_utilities.advanced_pipe_wrench": "Advanced Pipe Wrench",
+  "tooltip.advanced_pipez_utilities.advanced_pipe_wrench.connection": "Right-click: Toggle the selected connection",
+  "tooltip.advanced_pipez_utilities.advanced_pipe_wrench.extraction": "Sneak + right-click: Toggle extraction (connects first)",
+  "tooltip.advanced_pipez_utilities.advanced_pipe_wrench.grid": "Grid: edges = adjacent sides; center = front; corners = back",
+  "message.advanced_pipez_utilities.no_inventory": "That side has no inventory to extract from"
+}

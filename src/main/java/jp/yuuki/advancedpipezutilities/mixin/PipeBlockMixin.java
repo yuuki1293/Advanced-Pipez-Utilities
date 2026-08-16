@@ -1,0 +1,86 @@
+package jp.yuuki.advancedpipezutilities.mixin;
+
+import de.maxhenkel.pipez.blocks.PipeBlock;
+import de.maxhenkel.pipez.blocks.tileentity.PipeTileEntity;
+import jp.yuuki.advancedpipezutilities.item.ModItems;
+import jp.yuuki.advancedpipezutilities.pipe.ManualConnectionAccess;
+import jp.yuuki.advancedpipezutilities.pipe.PipePlacementIntent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+@Mixin(value = PipeBlock.class, remap = false)
+public abstract class PipeBlockMixin {
+
+    @Inject(method = "getStateForPlacement", at = @At("RETURN"), cancellable = true)
+    private void advancedPipezUtilities$connectOnlyToPlacementTarget(BlockPlaceContext context,
+                                                                     CallbackInfoReturnable<BlockState> cir) {
+        BlockState state = cir.getReturnValue();
+        if (state == null) {
+            return;
+        }
+
+        PipeBlock self = (PipeBlock) (Object) this;
+        Direction targetSide = context.getClickedFace().getOpposite();
+        boolean hasExternalTarget = !context.replacingClickedOnBlock()
+                && self.isAbleToConnect(context.getLevel(), context.getClickedPos(), targetSide);
+
+        if (!context.getLevel().isClientSide) {
+            PipePlacementIntent.record(
+                    context.getLevel(),
+                    context.getClickedPos(),
+                    hasExternalTarget ? targetSide : null
+            );
+        }
+
+        for (Direction side : Direction.values()) {
+            state = state.setValue(self.getProperty(side), hasExternalTarget && side == targetSide);
+        }
+
+        // The placement event needs a tile entity to persist the initial connection policy.
+        cir.setReturnValue(state.setValue(PipeBlock.HAS_DATA, true));
+    }
+
+    @Inject(method = "isConnected", at = @At("HEAD"), cancellable = true)
+    private void advancedPipezUtilities$requireManualInventoryConnection(Level level, BlockPos pos,
+                                                                          Direction side,
+                                                                          CallbackInfoReturnable<Boolean> cir) {
+        PipeBlock self = (PipeBlock) (Object) this;
+        if (self.isPipe(level, pos, side) || !self.canConnectTo(level, pos, side)) {
+            return;
+        }
+
+        PipeTileEntity tile = self.getTileEntity(level, pos);
+        boolean manuallyConnected = tile instanceof ManualConnectionAccess access
+                && access.advancedPipezUtilities$isManuallyConnected(side);
+        cir.setReturnValue(manuallyConnected && !tile.isDisconnected(side));
+    }
+
+    @Inject(
+            method = "getShape(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/shapes/CollisionContext;)Lnet/minecraft/world/phys/shapes/VoxelShape;",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void advancedPipezUtilities$useFullBlockWrenchSelection(BlockState state, BlockGetter level,
+                                                                    BlockPos pos, CollisionContext context,
+                                                                    CallbackInfoReturnable<VoxelShape> cir) {
+        if (context instanceof EntityCollisionContext entityContext
+                && entityContext.getEntity() instanceof Player player
+                && (player.getMainHandItem().is(ModItems.ADVANCED_PIPE_WRENCH)
+                    || player.getOffhandItem().is(ModItems.ADVANCED_PIPE_WRENCH))) {
+            cir.setReturnValue(Shapes.block());
+        }
+    }
+}

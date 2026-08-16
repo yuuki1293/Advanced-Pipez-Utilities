@@ -1,0 +1,7 @@
+{
+  "item.advanced_pipez_utilities.advanced_pipe_wrench": "高性能パイプレンチ",
+  "tooltip.advanced_pipez_utilities.advanced_pipe_wrench.connection": "右クリック：選択した方向の接続を切り替え",
+  "tooltip.advanced_pipez_utilities.advanced_pipe_wrench.extraction": "Shift＋右クリック：自動搬出を切り替え（未接続なら先に接続）",
+  "tooltip.advanced_pipez_utilities.advanced_pipe_wrench.grid": "表示線：辺＝上下左右／中央＝手前／四隅＝奥",
+  "message.advanced_pipez_utilities.no_inventory": "その方向には搬出元にできるインベントリがありません"
+}

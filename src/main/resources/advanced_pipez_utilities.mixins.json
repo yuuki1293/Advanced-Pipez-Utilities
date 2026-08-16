@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "jp.yuuki.advancedpipezutilities.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "PipeBlockMixin",
+    "PipeTileEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
