@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "advanced_pipez_utilities:advanced_pipe_wrench"
+    }
+  ],
+  "result": {
+    "item": "pipez:wrench",
+    "count": 1
+  }
+}
