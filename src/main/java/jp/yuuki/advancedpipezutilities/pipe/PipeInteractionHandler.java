@@ -6,8 +6,6 @@ import jp.yuuki.advancedpipezutilities.item.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -61,7 +59,6 @@ public final class PipeInteractionHandler {
             pipe.setExtracting(level, pos, side, false);
         }
         setConnection(level, pos, pipe, side, connect);
-        playWrenchSound(level, pos, connect ? 1.15F : 0.85F);
         PipeTileEntity.markPipesDirty(level, pos);
     }
 
@@ -79,7 +76,6 @@ public final class PipeInteractionHandler {
 
         boolean extracting = pipe.isExtracting(level, pos, side);
         pipe.setExtracting(level, pos, side, !extracting);
-        playWrenchSound(level, pos, extracting ? 0.9F : 1.25F);
         PipeTileEntity.markPipesDirty(level, pos);
     }
 
@@ -112,7 +108,4 @@ public final class PipeInteractionHandler {
         }
     }
 
-    private static void playWrenchSound(Level level, BlockPos pos, float pitch) {
-        level.playSound(null, pos, SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.BLOCKS, 0.55F, pitch);
-    }
 }
