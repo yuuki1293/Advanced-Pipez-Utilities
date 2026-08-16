@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import de.maxhenkel.pipez.blocks.PipeBlock;
 import jp.yuuki.advancedpipezutilities.AdvancedPipezUtilities;
 import jp.yuuki.advancedpipezutilities.item.ModItems;
+import jp.yuuki.advancedpipezutilities.pipe.PipeItemHelper;
 import jp.yuuki.advancedpipezutilities.pipe.PipeSideSelector;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
@@ -57,7 +58,7 @@ public final class PipeWrenchOverlayRenderer {
         Minecraft minecraft = Minecraft.getInstance();
         Player player = minecraft.player;
         Level level = minecraft.level;
-        if (player == null || level == null || !isHoldingAdvancedWrench(player)) {
+        if (player == null || level == null) {
             return;
         }
 
@@ -65,6 +66,9 @@ public final class PipeWrenchOverlayRenderer {
         BlockPos pos = hit.getBlockPos();
         BlockState state = level.getBlockState(pos);
         if (!(state.getBlock() instanceof PipeBlock pipe)) {
+            return;
+        }
+        if (!isHoldingAdvancedWrench(player) && !PipeItemHelper.isHoldingSamePipe(player, pipe)) {
             return;
         }
 

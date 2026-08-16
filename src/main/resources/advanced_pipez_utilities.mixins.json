@@ -4,6 +4,7 @@
   "package": "jp.yuuki.advancedpipezutilities.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "BlockItemMixin",
     "PipeBlockMixin",
     "PipeTileEntityMixin"
   ],

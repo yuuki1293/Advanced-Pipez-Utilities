@@ -4,6 +4,7 @@ import de.maxhenkel.pipez.blocks.PipeBlock;
 import de.maxhenkel.pipez.blocks.tileentity.PipeTileEntity;
 import jp.yuuki.advancedpipezutilities.item.ModItems;
 import jp.yuuki.advancedpipezutilities.pipe.ManualConnectionAccess;
+import jp.yuuki.advancedpipezutilities.pipe.PipeItemHelper;
 import jp.yuuki.advancedpipezutilities.pipe.PipePlacementIntent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -79,7 +80,8 @@ public abstract class PipeBlockMixin {
         if (context instanceof EntityCollisionContext entityContext
                 && entityContext.getEntity() instanceof Player player
                 && (player.getMainHandItem().is(ModItems.ADVANCED_PIPE_WRENCH)
-                    || player.getOffhandItem().is(ModItems.ADVANCED_PIPE_WRENCH))) {
+                    || player.getOffhandItem().is(ModItems.ADVANCED_PIPE_WRENCH)
+                    || PipeItemHelper.isHoldingSamePipe(player, (PipeBlock) (Object) this))) {
             cir.setReturnValue(Shapes.block());
         }
     }
