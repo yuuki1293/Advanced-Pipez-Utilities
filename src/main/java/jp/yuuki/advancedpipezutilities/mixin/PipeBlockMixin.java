@@ -10,6 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -24,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(value = PipeBlock.class, remap = false)
 public abstract class PipeBlockMixin {
 
-    @Inject(method = "getStateForPlacement", at = @At("RETURN"), cancellable = true)
+    @Inject(method = {"getStateForPlacement", "m_5573_"}, at = @At("RETURN"), cancellable = true)
     private void advancedPipezUtilities$connectOnlyToPlacementTarget(BlockPlaceContext context,
                                                                      CallbackInfoReturnable<BlockState> cir) {
         BlockState state = cir.getReturnValue();
@@ -54,7 +55,7 @@ public abstract class PipeBlockMixin {
     }
 
     @Inject(method = "isConnected", at = @At("HEAD"), cancellable = true)
-    private void advancedPipezUtilities$requireManualInventoryConnection(Level level, BlockPos pos,
+    private void advancedPipezUtilities$requireManualInventoryConnection(LevelAccessor level, BlockPos pos,
                                                                           Direction side,
                                                                           CallbackInfoReturnable<Boolean> cir) {
         PipeBlock self = (PipeBlock) (Object) this;
@@ -69,7 +70,10 @@ public abstract class PipeBlockMixin {
     }
 
     @Inject(
-            method = "getShape(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/shapes/CollisionContext;)Lnet/minecraft/world/phys/shapes/VoxelShape;",
+            method = {
+                    "getShape(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/shapes/CollisionContext;)Lnet/minecraft/world/phys/shapes/VoxelShape;",
+                    "m_5940_(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/shapes/CollisionContext;)Lnet/minecraft/world/phys/shapes/VoxelShape;"
+            },
             at = @At("HEAD"),
             cancellable = true
     )
@@ -78,8 +82,8 @@ public abstract class PipeBlockMixin {
                                                                     CallbackInfoReturnable<VoxelShape> cir) {
         if (context instanceof EntityCollisionContext entityContext
                 && entityContext.getEntity() instanceof Player player
-                && (player.getMainHandItem().is(ModItems.ADVANCED_PIPE_WRENCH)
-                    || player.getOffhandItem().is(ModItems.ADVANCED_PIPE_WRENCH))) {
+                && (player.getMainHandItem().is(ModItems.ADVANCED_PIPE_WRENCH.get())
+                    || player.getOffhandItem().is(ModItems.ADVANCED_PIPE_WRENCH.get()))) {
             cir.setReturnValue(Shapes.block());
         }
     }

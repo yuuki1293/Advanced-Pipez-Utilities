@@ -12,10 +12,10 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.bus.api.EventPriority;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.common.util.TriState;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class PipeInteractionHandler {
 
@@ -25,7 +25,7 @@ public final class PipeInteractionHandler {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onPipeClick(PlayerInteractEvent.RightClickBlock event) {
         ItemStack held = event.getEntity().getItemInHand(event.getHand());
-        if (!held.is(ModItems.ADVANCED_PIPE_WRENCH)) {
+        if (!held.is(ModItems.ADVANCED_PIPE_WRENCH.get())) {
             return;
         }
 
@@ -34,8 +34,8 @@ public final class PipeInteractionHandler {
             return;
         }
 
-        event.setUseBlock(TriState.FALSE);
-        event.setUseItem(TriState.FALSE);
+        event.setUseBlock(Event.Result.DENY);
+        event.setUseItem(Event.Result.DENY);
         event.setCancellationResult(InteractionResult.sidedSuccess(event.getLevel().isClientSide));
         event.setCanceled(true);
 

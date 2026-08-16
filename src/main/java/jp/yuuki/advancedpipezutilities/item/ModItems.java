@@ -1,20 +1,20 @@
 package jp.yuuki.advancedpipezutilities.item;
 
 import jp.yuuki.advancedpipezutilities.AdvancedPipezUtilities;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public final class ModItems {
 
     private static final DeferredRegister<Item> ITEMS =
-            DeferredRegister.create(BuiltInRegistries.ITEM, AdvancedPipezUtilities.MOD_ID);
+            DeferredRegister.create(ForgeRegistries.ITEMS, AdvancedPipezUtilities.MOD_ID);
 
-    public static final DeferredHolder<Item, AdvancedPipeWrenchItem> ADVANCED_PIPE_WRENCH =
+    public static final RegistryObject<AdvancedPipeWrenchItem> ADVANCED_PIPE_WRENCH =
             ITEMS.register("advanced_pipe_wrench", () -> new AdvancedPipeWrenchItem(new Item.Properties()));
 
     private ModItems() {

@@ -19,11 +19,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.client.event.RenderHighlightEvent;
-import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.client.event.RenderHighlightEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @OnlyIn(Dist.CLIENT)
 public final class PipeWrenchOverlayRenderer {
@@ -37,9 +37,9 @@ public final class PipeWrenchOverlayRenderer {
     private static final double ICON_CENTER = 6D / 16D;
     private static final double ICON_HIGH = 12D / 16D;
 
-    private static final ResourceLocation PIPE_BLOCK = ResourceLocation.fromNamespaceAndPath(
+    private static final ResourceLocation PIPE_BLOCK = new ResourceLocation(
             AdvancedPipezUtilities.MOD_ID, "textures/gui/overlay/tool_pipe_block.png");
-    private static final ResourceLocation PIPE_CONNECT = ResourceLocation.fromNamespaceAndPath(
+    private static final ResourceLocation PIPE_CONNECT = new ResourceLocation(
             AdvancedPipezUtilities.MOD_ID, "textures/gui/overlay/tool_pipe_connect.png");
 
     private PipeWrenchOverlayRenderer() {
@@ -106,8 +106,8 @@ public final class PipeWrenchOverlayRenderer {
     }
 
     private static boolean isHoldingAdvancedWrench(Player player) {
-        return player.getMainHandItem().is(ModItems.ADVANCED_PIPE_WRENCH)
-                || player.getOffhandItem().is(ModItems.ADVANCED_PIPE_WRENCH);
+        return player.getMainHandItem().is(ModItems.ADVANCED_PIPE_WRENCH.get())
+                || player.getOffhandItem().is(ModItems.ADVANCED_PIPE_WRENCH.get());
     }
 
     private static Direction leftOf(Direction front) {
@@ -159,10 +159,11 @@ public final class PipeWrenchOverlayRenderer {
 
     private static void addTexturedVertex(VertexConsumer consumer, PoseStack.Pose pose, Vec3 point,
                                           int color, float u, float v) {
-        consumer.addVertex(pose, (float) point.x, (float) point.y, (float) point.z)
-                .setColor(color)
-                .setUv(u, v)
-                .setLight(LightTexture.FULL_BRIGHT);
+        consumer.vertex(pose.pose(), (float) point.x, (float) point.y, (float) point.z)
+                .color(color)
+                .uv(u, v)
+                .uv2(LightTexture.FULL_BRIGHT)
+                .endVertex();
     }
 
     private static void drawLine(VertexConsumer consumer, PoseStack.Pose pose, Direction face,
@@ -172,12 +173,14 @@ public final class PipeWrenchOverlayRenderer {
         Vec3 end = toWorld(face, pos, u2, v2).subtract(camera);
         Vec3 normal = start.subtract(end);
 
-        consumer.addVertex(pose, (float) start.x, (float) start.y, (float) start.z)
-                .setColor(pulse, pulse, 1F, 1F)
-                .setNormal(pose, (float) normal.x, (float) normal.y, (float) normal.z);
-        consumer.addVertex(pose, (float) end.x, (float) end.y, (float) end.z)
-                .setColor(pulse, pulse, 1F, 1F)
-                .setNormal(pose, (float) normal.x, (float) normal.y, (float) normal.z);
+        consumer.vertex(pose.pose(), (float) start.x, (float) start.y, (float) start.z)
+                .color(pulse, pulse, 1F, 1F)
+                .normal(pose.normal(), (float) normal.x, (float) normal.y, (float) normal.z)
+                .endVertex();
+        consumer.vertex(pose.pose(), (float) end.x, (float) end.y, (float) end.z)
+                .color(pulse, pulse, 1F, 1F)
+                .normal(pose.normal(), (float) normal.x, (float) normal.y, (float) normal.z)
+                .endVertex();
     }
 
     private static Vec3 toWorld(Direction face, BlockPos pos, double u, double v) {

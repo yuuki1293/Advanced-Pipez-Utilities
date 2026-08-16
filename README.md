@@ -2,7 +2,7 @@
 
 [![Build](https://github.com/yuuki1293/Advanced-Pipez-Utilities/actions/workflows/build.yml/badge.svg)](https://github.com/yuuki1293/Advanced-Pipez-Utilities/actions/workflows/build.yml)
 
-Advanced Pipez Utilities is a Pipez add-on for Minecraft 1.21.1 on NeoForge. It adds GregTech-style manual pipe connections and an advanced pipe wrench.
+Advanced Pipez Utilities is a Pipez add-on for Minecraft 1.20.1 on Forge. It adds GregTech-style manual pipe connections and an advanced pipe wrench.
 
 ## Features
 
@@ -18,10 +18,10 @@ Advanced Pipez Utilities is a Pipez add-on for Minecraft 1.21.1 on NeoForge. It 
 
 ## Requirements
 
-- Minecraft 1.21.1
-- NeoForge 21.1.209 or later
-- Pipez 1.21.1-1.2.31 or later
-- Java 21
+- Minecraft 1.20.1
+- Forge 47.4.10 or later
+- Pipez 1.20.1-1.2.26 or later
+- Java 17
 
 ## Building
 
@@ -31,7 +31,7 @@ Advanced Pipez Utilities is a Pipez add-on for Minecraft 1.21.1 on NeoForge. It 
 
 The built mod is written to `build/libs/advanced_pipez_utilities-1.0.0.jar`.
 
-Every push to `1.21.1` and every pull request targeting `1.21.1` is built automatically by GitHub Actions. Successful workflow runs provide the generated JAR as a downloadable artifact.
+Every push to `1.20.1` and every pull request targeting `1.20.1` is built automatically by GitHub Actions. Successful workflow runs provide the generated JAR as a downloadable artifact.
 
 ## License
 

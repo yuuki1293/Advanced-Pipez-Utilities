@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[4,)"
+loaderVersion = "[47,)"
 license = "MIT"
 
 [[mods]]
@@ -12,25 +12,22 @@ GregTech-style manual connections and an advanced wrench for Pipez.
 '''
 
 [[dependencies.${mod_id}]]
-modId = "neoforge"
-type = "required"
-versionRange = "[${neoforge_version},)"
+modId = "forge"
+mandatory = true
+versionRange = "[${forge_dependency_version},)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${mod_id}]]
 modId = "minecraft"
-type = "required"
-versionRange = "[${minecraft_version},1.21.2)"
+mandatory = true
+versionRange = "[${minecraft_version},1.20.2)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${mod_id}]]
 modId = "pipez"
-type = "required"
+mandatory = true
 versionRange = "[${pipez_version},)"
 ordering = "AFTER"
 side = "BOTH"
-
-[[mixins]]
-config = "advanced_pipez_utilities.mixins.json"

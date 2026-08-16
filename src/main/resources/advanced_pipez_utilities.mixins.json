@@ -2,7 +2,8 @@
   "required": true,
   "minVersion": "0.8",
   "package": "jp.yuuki.advancedpipezutilities.mixin",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "advanced_pipez_utilities.refmap.json",
   "mixins": [
     "PipeBlockMixin",
     "PipeTileEntityMixin"

@@ -3,7 +3,6 @@ package jp.yuuki.advancedpipezutilities.mixin;
 import de.maxhenkel.pipez.blocks.tileentity.PipeTileEntity;
 import jp.yuuki.advancedpipezutilities.pipe.ManualConnectionAccess;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -49,15 +48,13 @@ public abstract class PipeTileEntityMixin implements ManualConnectionAccess {
         }
     }
 
-    @Inject(method = "loadAdditional", at = @At("TAIL"))
-    private void advancedPipezUtilities$loadManualConnections(CompoundTag tag, HolderLookup.Provider provider,
-                                                               CallbackInfo ci) {
+    @Inject(method = {"load", "m_142466_"}, at = @At("TAIL"))
+    private void advancedPipezUtilities$loadManualConnections(CompoundTag tag, CallbackInfo ci) {
         advancedPipezUtilities$manualConnections = tag.getByte(ADVANCED_PIPEZ_UTILITIES_MANUAL_CONNECTIONS);
     }
 
-    @Inject(method = "saveAdditional", at = @At("TAIL"))
-    private void advancedPipezUtilities$saveManualConnections(CompoundTag tag, HolderLookup.Provider provider,
-                                                               CallbackInfo ci) {
+    @Inject(method = {"saveAdditional", "m_183515_"}, at = @At("TAIL"))
+    private void advancedPipezUtilities$saveManualConnections(CompoundTag tag, CallbackInfo ci) {
         if (advancedPipezUtilities$manualConnections != 0) {
             tag.putByte(ADVANCED_PIPEZ_UTILITIES_MANUAL_CONNECTIONS,
                     advancedPipezUtilities$manualConnections);
