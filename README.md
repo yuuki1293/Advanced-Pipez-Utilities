@@ -33,6 +33,26 @@ The built mod is written to `build/libs/advanced_pipez_utilities-1.0.0.jar`.
 
 Every push to `1.20.1` and every pull request targeting `1.20.1` is built automatically by GitHub Actions. Successful workflow runs provide the generated JAR as a downloadable artifact.
 
+## Releasing
+
+Releases are published automatically to Modrinth, CurseForge, and GitHub Releases when a version tag is pushed.
+
+Configure these GitHub repository secrets before publishing:
+
+- `MODRINTH_TOKEN`: a Modrinth personal access token with permission to create versions for project `dVgBH47t`
+- `CURSEFORGE_TOKEN`: a CurseForge API token with permission to upload files to project `1655012`
+
+`GITHUB_TOKEN` is provided automatically by GitHub Actions and does not need to be configured manually.
+
+The tag must match `mod_version` and `minecraft_version` from `gradle.properties`. For example:
+
+```shell
+git tag v1.0.0+1.20.1
+git push origin v1.0.0+1.20.1
+```
+
+The release workflow validates the tag, builds the production JAR, and publishes the same artifact to all three services. Alpha, beta, and release-candidate versions are marked as prereleases automatically when `mod_version` contains `-alpha`, `-beta`, or `-rc`.
+
 ## License
 
 The source code is available under the MIT License. The two GTCEu Modern overlay assets retain their original LGPL-3.0 license; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for details.
